@@ -25,11 +25,10 @@ for result in results:
     i += 1
     keywords = result['keyword']
     for keyword in keywords:
-        temp = numbers[keyword]
-        if not temp:
-            numbers[keyword] = 1
+        if keyword in numbers:
+            numbers[keyword] += 1
         else:
-            numbers[keyword] = temp + 1
+            numbers[keyword] = 1
     if i % 1000 == 0:
         print("PROCESS: %s", i)
 
