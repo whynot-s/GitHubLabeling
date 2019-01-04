@@ -19,7 +19,7 @@ print("Connected to Mysql %s:%s %s" % (mysqlConfig['host'], mysqlConfig['port'],
 
 results = readme_cleaned.find({}, {'keyword' : 1, '_id' : 0})
 numbers = {}
-total = len(results)
+
 i = 0
 for result in results:
     i += 1
@@ -31,14 +31,14 @@ for result in results:
         else:
             numbers[keywords] = temp + 1
     if i % 1000 == 0:
-        print("PROCESS: %s/%s", i, total)
+        print("PROCESS: %s", i)
 
-i = 0
+j = 0
 for key, value in numbers.items():
-    i += 1
+    j += 1
     cursor.execute("INSERT INTO Labels VALUES(\"%s\", %s)" % (key, value))
-    if i % 1000 == 0:
-        print("INSERT: %s/%s", i, total)
+    if j % 1000 == 0:
+        print("INSERT: %s/%s", j, i)
 
 mysql_db.commit()
 
