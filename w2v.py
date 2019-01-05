@@ -10,7 +10,7 @@ def process_readme():
     with open("/sdpdata2/wjrj/github.en.text", "w") as f:
         for result in results:
             i += 1
-            f.write("%s\n" % result[0])
+            f.write("%s\n" % result['readme_cleaned'])
             if i % 1000 == 0:
                 print("Processed %d" % i)
         f.close()
