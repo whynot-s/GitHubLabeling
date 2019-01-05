@@ -18,7 +18,12 @@ def process_readme():
 
 def train():
     model = gensim.models.Word2Vec.load("/sdpdata2/wjrj/wiki.en.text.model")
+    model.train(gensim.models.word2vec.LineSentence("/sdpdata2/wjrj/github.en.text"),
+                total_examples=model.corpus_count, epochs=model.iter)
+    model.save("/sdpdata2/wjrj/wiki.en.text.model_with_readme")
+    model.wv.save_word2vec_format("/sdpdata2/wjrj/wiki.en.tect.vector_with_readme", binary=False)
 
 
 if __name__ == "__main__":
-    process_readme()
+    # process_readme()
+    train()
