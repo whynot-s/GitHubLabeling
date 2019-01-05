@@ -24,6 +24,7 @@ def filter_labels():
         if j % 1000 == 0:
             print("INSERT: %s/%s" % (j, i))
     mysql_db.commit()
+    mysql_db.close()
 
 
 def add_no():
@@ -35,7 +36,19 @@ def add_no():
         i += 1
         cursor.execute("UPDATE Labels_filtered SET number = %s WHERE label = \"%s\"" % (i, result[0]))
     mysql_db.commit()
+    mysql_db.close()
 
-if __name__ == "__main__":
-    filter_labels()
-    add_no()
+
+def load_all_labels():
+    labels = {}
+    cursor, mysql_db = DB.aquireDB("mysql", "GitHubLabel")
+    cursor.execute("SELECT label, number FROM Labels_filtered")
+    results = cursor.fetchall()
+    for result in results:
+        labels[result[0]] = int(result[1])
+    mysql_db.close()
+    return labels
+
+# if __name__ == "__main__":
+#     filter_labels()
+#     add_no()
