@@ -26,12 +26,12 @@ def train():
 def create_bucket():
     cursor, mysql_db = DB.aquireDB("mysql", "GitHubLabel")
     readme_cleaned = DB.aquireDB("mongodb", "readme_cleaned")
-    results = readme_cleaned.find({}, {"readme_cleaned": 1, "_id": 0, "pid": 1})
+    results = readme_cleaned.find({}, {"readme_cleaned": 1, "_id": 1, "pid": 1})
     i = 0
     data = []
     for result in results:
         i += 1
-        data.append(tuple([int(result["pid"]), result["readme_cleaned"], len(result["readme_cleaned"].split(" "))]))
+        data.append(tuple([int(result["pid"]), result["_id"], len(result["readme_cleaned"].split(" "))]))
         if i % 1000 == 0:
             print("Processed %d" % i)
             cursor.executemany("INSERT INTO rdLength VALUES(%s, %s, %s)", data)
