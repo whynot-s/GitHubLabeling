@@ -31,7 +31,7 @@ def create_bucket():
     data = []
     for result in results:
         i += 1
-        data.append(tuple([result["pid"], result["readme_cleaned"], len(result["readme_cleaned"].split(" "))]))
+        data.append(tuple([int(result["pid"]), result["readme_cleaned"], len(result["readme_cleaned"].split(" "))]))
         if i % 1000 == 0:
             print("Processed %d" % i)
             cursor.executemany("INSERT INTO rdLength VALUES(%d, %s, %d)", data)
