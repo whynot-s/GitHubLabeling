@@ -34,11 +34,11 @@ def create_bucket():
         data.append(tuple([int(result["pid"]), result["readme_cleaned"], len(result["readme_cleaned"].split(" "))]))
         if i % 1000 == 0:
             print("Processed %d" % i)
-            cursor.executemany("INSERT INTO rdLength VALUES(%d, %s, %d)", data)
+            cursor.executemany("INSERT INTO rdLength VALUES(%s, %s, %s)", data)
             mysql_db.commit()
             data = []
     if len(data) != 0:
-        cursor.executemany("INSERT INTO rdLength VALUES(%d, %s, %d)", data)
+        cursor.executemany("INSERT INTO rdLength VALUES(%s, %s, %s)", data)
         mysql_db.commit()
 
 
