@@ -52,7 +52,7 @@ def next_id(batch_size=100):
 
 
 def data_by_ids(ids):
-    print(ids[-1])
+    max_length = 0
     temp = readme_cleaned.find({'pid': ids[-1]}, {'readme_cleaned': 1, '_id': 0})
     for t in temp:
         max_length = len(t['readme_cleaned'].split(" "))
