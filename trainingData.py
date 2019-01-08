@@ -15,7 +15,7 @@ lb_list = {}
 cursor.execute("SELECT label, number FROM Labels_filtered")
 lbs = cursor.fetchall()
 for lb in lbs:
-    lb_list[lb["label"]] = int(lb["number"])
+    lb_list[lb[0]] = int(lb[1])
 
 
 def next_batch(batch_size=100):
@@ -35,7 +35,7 @@ def next_id(batch_size=100):
         ids = cursor.fetchall()
         id_list = []
         for pid in ids:
-            id_list.append(int(pid["pid"]))
+            id_list.append(int(pid[0]))
         if len(id_list) != batch_size:
             global_counter = 1
             offset = (global_counter - 1) * batch_size * 100
@@ -43,7 +43,7 @@ def next_id(batch_size=100):
             ids = cursor.fetchall()
             id_list = []
             for pid in ids:
-                id_list.append(int(pid["pid"]))
+                id_list.append(int(pid[0]))
         mysql_counter = 0
     start_idx = mysql_counter * batch_size
     result = id_list[start_idx:start_idx+batch_size]
