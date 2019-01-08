@@ -6,7 +6,7 @@ topics = DB.aquireDB("mongodb", "topics")
 readme_cleaned = DB.aquireDB("mongodb", "readme_cleaned")
 cursor, mysql_db = DB.aquireDB("mysql", "GitHubLabel")
 model = gensim.models.Word2Vec.load("/sdpdata2/wjrj/wiki.en.text.model_with_readme")
-
+print("Word2Vec Model Loaded")
 global_counter = 0
 mysql_counter = 0
 id_list = []
@@ -52,6 +52,7 @@ def next_id(batch_size=100):
 
 
 def data_by_ids(ids):
+    print(ids[-1])
     temp = readme_cleaned.find({'pid': ids[-1]}, {'readme_cleaned': 1, '_id': 0})
     for t in temp:
         max_length = len(t['readme_cleaned'].split(" "))
