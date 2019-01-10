@@ -81,7 +81,7 @@ def filter_pid():
         if i % 1000 == 0:
             print("Processed %s" % i)
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 #     filter_labels()
 #     add_no()
-    filter_pid()
+#     filter_pid()
