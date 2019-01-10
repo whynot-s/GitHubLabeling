@@ -59,24 +59,30 @@ def filter_pid():
     for r in result:
         labels.append(r[0])
     labels = set(labels)
-    cursor.execute("SELECT pid, rdlength FROM rdLength_sorted")
-    result = cursor.fetchall()
+    limit = 100000
+    offset_idx = 0
     i = 0
-    for r in result:
-        i += 1
-        pid = r[0]
-        rdlength = r[1]
-        topics = all_topics.find({'pid': str(pid)}, {'topic' : 1, '_id' : 0})
-        flag = False
-        for topic in topics:
-            if topic in labels:
-                flag = True
-                break
-        if flag:
-            cursor.execute("INSERT INTO rdLength_sorted2 VALUES(%s, %s)" % (pid, rdlength))
-            mysql_db.commit()
-        if i % 1000 == 0:
-            print("Processed %s" % i)
+    while True:
+        offset_idx += 1
+        cursor.execute("SELECT pid, rdlength FROM rdLength_sorted LIMIT %s OFFSET %s" % (limit, (offset_idx - 1) * limit))
+        result = cursor.fetchall()
+        if not result or len(result) == 0:
+            break
+        for r in result:
+            i += 1
+            pid = r[0]
+            rdlength = r[1]
+            topics = all_topics.find({'pid': str(pid)}, {'topic' : 1, '_id' : 0})
+            flag = False
+            for topic in topics:
+                if topic in labels:
+                    flag = True
+                    break
+            if flag:
+                cursor.execute("INSERT INTO rdLength_sorted2 VALUES(%s, %s)" % (pid, rdlength))
+            if i % 1000 == 0:
+                print("Processed %s" % i)
+        mysql_db.commit()
     mysql_db.close()
 
 if __name__ == "__main__":
