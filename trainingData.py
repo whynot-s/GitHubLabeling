@@ -68,7 +68,6 @@ def data_by_ids(ids):
                 y_temp[idx] = 1
         Y.append(np.array(y_temp))
         xws = readme_cleaned.find({'pid': str(pid)}, {'readme_cleaned': 1, '_id': 0})
-        print(pid)
         for xw in xws:
             words = xw["readme_cleaned"].split(" ")
             for word in words:
