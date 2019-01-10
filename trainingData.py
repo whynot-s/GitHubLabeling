@@ -53,7 +53,7 @@ def next_id(batch_size=100):
 
 def data_by_ids(ids):
     max_length = 0
-    temp = readme_cleaned.find({'pid': ids[-1]}, {'readme_cleaned': 1, '_id': 0})
+    temp = readme_cleaned.find({'pid': str(ids[-1])}, {'readme_cleaned': 1, '_id': 0})
     for t in temp:
         max_length = len(t['readme_cleaned'].split(" "))
     X = []
@@ -61,13 +61,13 @@ def data_by_ids(ids):
     for pid in ids:
         x_temp = []
         y_temp = np.zeros(len(lb_list))
-        ys = topics.find({'pid': pid}, {'topic': 1, '_id': 0})
+        ys = topics.find({'pid': str(pid)}, {'topic': 1, '_id': 0})
         for y in ys:
             for topic in y['topic']:
                 idx = lb_list[topic] if topic in lb_list else 0
                 y_temp[idx] = 1
         Y.append(np.array(y_temp))
-        xws = readme_cleaned.find({'pid': pid}, {'readme_cleaned': 1, '_id': 0})
+        xws = readme_cleaned.find({'pid': str(pid)}, {'readme_cleaned': 1, '_id': 0})
         print(pid)
         for xw in xws:
             words = xw["readme_cleaned"].split(" ")
