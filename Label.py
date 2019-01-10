@@ -72,12 +72,13 @@ def filter_pid():
             i += 1
             pid = r[0]
             rdlength = r[1]
-            topics = all_topics.find({'pid': str(pid)}, {'topic' : 1, '_id' : 0})
+            rl = all_topics.find({'pid': str(pid)}, {'topic' : 1, '_id' : 0})
             flag = False
-            for topic in topics:
-                if topic in labels:
-                    flag = True
-                    break
+            for topics in rl:
+                for topic in topics['topic']:
+                    if topic in labels:
+                        flag = True
+                        break
             if flag:
                 cursor.execute("INSERT INTO rdLength_sorted2 VALUES(%s, %s)" % (pid, rdlength))
             if i % 1000 == 0:
