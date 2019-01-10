@@ -51,7 +51,6 @@ def load_all_labels():
 
 
 def filter_pid():
-    all_topics = DB.aquireDB("mongodb", "topics")
     cursor, mysql_db = DB.aquireDB("mysql", "GitHubLabel")
     labels = []
     cursor.execute("SELECT label FROM Labels_filtered")
@@ -59,32 +58,28 @@ def filter_pid():
     for r in result:
         labels.append(r[0])
     labels = set(labels)
-    limit = 100000
-    offset_idx = 0
+    topics_db = DB.aquireDB("mongodb", "topics")
+    all_topics = topics_db.find({}, {'pid': 1, 'topic' : 1, '_id' : 0})
     i = 0
-    while True:
-        offset_idx += 1
-        cursor.execute("SELECT pid, rdlength FROM rdLength_sorted LIMIT %s OFFSET %s" % (limit, (offset_idx - 1) * limit))
-        result = cursor.fetchall()
-        if not result or len(result) == 0:
-            break
-        for r in result:
-            i += 1
-            pid = r[0]
-            rdlength = r[1]
-            rl = all_topics.find({'pid': str(pid)}, {'topic' : 1, '_id' : 0})
-            flag = False
-            for topics in rl:
-                for topic in topics['topic']:
-                    if topic in labels:
-                        flag = True
-                        break
-            if flag:
+    for topics_list in all_topics:
+        i += 1
+        pid = topics_list['pid']
+        flag = False
+        for topic in topics_list['topic']:
+            if topic in labels:
+                flag = True
+                break
+        if flag:
+            cursor.execute("SELECT rdlength FROM rdLength_sorted WHERE pid = %s" % pid)
+            result = cursor.fetchall()
+            rdlength = -1
+            for r in result:
+                rdlength = r[0]
+            if rdlength != -1:
                 cursor.execute("INSERT INTO rdLength_sorted2 VALUES(%s, %s)" % (pid, rdlength))
                 mysql_db.commit()
-            if i % 100 == 0:
-                print("Processed %s" % i)
-    mysql_db.close()
+        if i % 1000 == 0:
+            print("Processed %s" % i)
 
 if __name__ == "__main__":
 #     filter_labels()
