@@ -81,7 +81,7 @@ def filter_pid():
                         break
             if flag:
                 cursor.execute("INSERT INTO rdLength_sorted2 VALUES(%s, %s)" % (pid, rdlength))
-            if i % 1000 == 0:
+            if i % 100 == 0:
                 print("Processed %s" % i)
         mysql_db.commit()
     mysql_db.close()
