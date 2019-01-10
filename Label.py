@@ -49,6 +49,37 @@ def load_all_labels():
     mysql_db.close()
     return labels
 
-# if __name__ == "__main__":
+
+def filter_pid():
+    all_topics = DB.aquireDB("mongodb", "topics")
+    cursor, mysql_db = DB.aquireDB("mysql", "GitHubLabel")
+    labels = []
+    cursor.execute("SELECT label FROM Labels_filtered")
+    result = cursor.fetchall()
+    for r in result:
+        labels.append(r[0])
+    labels = set(labels)
+    cursor.execute("SELECT pid, rdlength FROM rdLength_sorted")
+    result = cursor.fetchall()
+    i = 0
+    for r in result:
+        i += 1
+        pid = r[0]
+        rdlength = r[1]
+        topics = all_topics.find({'pid': str(pid)}, {'topic' : 1, '_id' : 0})
+        flag = False
+        for topic in topics:
+            if topic in labels:
+                flag = True
+                break
+        if flag:
+            cursor.execute("INSERT INTO rdLength_sorted2 VALUES(%s, %s)" % (pid, rdlength))
+            mysql_db.commit()
+        if i % 1000 == 0:
+            print("Processed %s" % i)
+    mysql_db.close()
+
+if __name__ == "__main__":
 #     filter_labels()
 #     add_no()
+    filter_pid()

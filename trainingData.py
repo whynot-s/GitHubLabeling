@@ -31,7 +31,7 @@ def next_id(batch_size=100):
     if mysql_counter % 100 == 0:
         global_counter += 1
         offset = (global_counter - 1) * batch_size * 100
-        cursor.execute("SELECT pid FROM rdLength LIMIT %s OFFSET %s" % (batch_size * 100, offset))
+        cursor.execute("SELECT pid FROM rdLength_sorted LIMIT %s OFFSET %s" % (batch_size * 100, offset))
         ids = cursor.fetchall()
         id_list = []
         for pid in ids:
@@ -39,7 +39,7 @@ def next_id(batch_size=100):
         if len(id_list) != batch_size:
             global_counter = 1
             offset = (global_counter - 1) * batch_size * 100
-            cursor.execute("SELECT pid FROM rdLength LIMIT %s OFFSET %s" % (batch_size * 100, offset))
+            cursor.execute("SELECT pid FROM rdLength_sorted LIMIT %s OFFSET %s" % (batch_size * 100, offset))
             ids = cursor.fetchall()
             id_list = []
             for pid in ids:
@@ -64,8 +64,8 @@ def data_by_ids(ids):
         ys = topics.find({'pid': str(pid)}, {'topic': 1, '_id': 0})
         for y in ys:
             for topic in y['topic']:
-                idx = lb_list[topic] if topic in lb_list else 0
-                y_temp[idx] = 1
+                if topic in lb_list:
+                    y_temp[lb_list[topic]] = 1
         Y.append(np.array(y_temp))
         xws = readme_cleaned.find({'pid': str(pid)}, {'readme_cleaned': 1, '_id': 0})
         for xw in xws:
