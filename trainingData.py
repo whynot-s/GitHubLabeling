@@ -72,7 +72,10 @@ def data_by_ids(ids):
         for xw in xws:
             words = xw["readme_cleaned"].split(" ")
             for word in words:
-                x_temp.append(model.wv[word])
+                try:
+                    x_temp.append(model.wv[word])
+                except:
+                    None
         for i in range(len(x_temp), max_length):
             x_temp.append(np.zeros(200))
         X.append(np.array(x_temp))
