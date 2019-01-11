@@ -65,7 +65,7 @@ def data_by_ids(ids):
         for y in ys:
             for topic in y['topic']:
                 if topic in lb_list:
-                    y_temp[lb_list[topic]] = 1
+                    y_temp[lb_list[topic] - 1] = 1
         Y.append(np.array(y_temp))
         xws = readme_cleaned.find({'pid': str(pid)}, {'readme_cleaned': 1, '_id': 0})
         for xw in xws:
