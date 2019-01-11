@@ -46,7 +46,7 @@ pred_correct = tf.count_nonzero(tf.multiply(tf.cast(label, tf.float32), logit_te
 precision = tf.divide(tf.cast(pred_correct, tf.float32), tf.cast(logit_true, tf.float32))
 recall = tf.divide(tf.cast(pred_correct, tf.float32), tf.cast(label_true, tf.float32))
 
-savedir = "log/readme_v1/"
+savedir = "/sdpdata2/wjrj/log/readme_v1/"
 saver = tf.train.Saver(max_to_keep=1)
 
 
