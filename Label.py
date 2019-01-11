@@ -76,7 +76,10 @@ def filter_pid():
             for r in result:
                 rdlength = r[0]
             if rdlength != -1:
-                cursor.execute("INSERT INTO rdLength_sorted2 VALUES(%s, %s)" % (pid, rdlength))
+                try:
+                    cursor.execute("INSERT INTO rdLength_sorted2 VALUES(%s, %s)" % (pid, rdlength))
+                except:
+                    None
                 mysql_db.commit()
         if i % 1000 == 0:
             print("Processed %s" % i)
@@ -84,4 +87,4 @@ def filter_pid():
 # if __name__ == "__main__":
 #     filter_labels()
 #     add_no()
-#     filter_pid()
+    filter_pid()
