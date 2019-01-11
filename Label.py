@@ -85,7 +85,23 @@ def filter_pid():
             print("Processed %s" % i)
 
 
+def split_data(count):
+    cursor, mysql_db = DB.aquireDB("mysql", "GitHubLabel")
+    for i in range(count):
+        cursor.execute("SELECT pid, rdlength FROM rdLength_sorted2 ORDER BY RAND() LIMIT 1")
+        result = cursor.fetchall()
+        for r in result:
+            pid = r[0]
+            rlength = r[1]
+            cursor.execute("INSERT INTO rdLength_validation VALUES(%s, %s)" % (pid, rlength))
+            cursor.execute("DELETE FROM rdLength_sorted2 WHERE pid = %s" % pid)
+            mysql_db.commit()
+        if i % 1000 == 0:
+            print("Processed %s" % i)
+
+
 if __name__ == "__main__":
 #     filter_labels()
 #     add_no()
-    filter_pid()
+#     filter_pid()
+    split_data(24604)
