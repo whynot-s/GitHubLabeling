@@ -21,6 +21,7 @@ for lb in lbs:
 def next_batch(batch_size=100):
     ids = next_id(batch_size)
     X, Y = data_by_ids(ids)
+    print(np.shape(X), np.shape(Y))
     return X, Y
 
 
