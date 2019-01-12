@@ -19,8 +19,8 @@ label_size = 3400
 word_vector_dim = 200
 
 learning_rate = 0.001
-training_iters = 10000
-display_step = 1000
+training_iters = 100000
+display_step = 100
 batch_size = 100
 
 n_hidden1 = 256
