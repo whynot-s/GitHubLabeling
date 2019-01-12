@@ -20,7 +20,7 @@ word_vector_dim = 200
 
 learning_rate = 0.001
 training_iters = 20000
-display_step = 100
+display_step = 1
 batch_size = 100
 
 n_hidden1 = 256
