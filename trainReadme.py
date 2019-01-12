@@ -28,7 +28,7 @@ n_hidden2 = 512
 n_hidden3 = 512
 
 x = tf.placeholder(tf.float32, [batch_size, None, word_vector_dim])
-label = tf.placeholder(tf.int32, [batch_size, label_size])
+label = tf.placeholder(tf.float32, [batch_size, label_size])
 
 x1 = tf.transpose(x, [1,0,2])
 rnn_cell = rnn.MultiRNNCell([rnn.LSTMCell(n_hidden1), rnn.LSTMCell(n_hidden2), rnn.LSTMCell(n_hidden3)])
