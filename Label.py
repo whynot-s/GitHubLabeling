@@ -100,8 +100,8 @@ def split_data(count):
             print("Processed %s" % i)
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 #     filter_labels()
 #     add_no()
 #     filter_pid()
-    split_data(24604)
+#     split_data(24604)

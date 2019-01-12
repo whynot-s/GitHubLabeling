@@ -32,7 +32,7 @@ label = tf.placeholder(tf.int32, [batch_size, label_size])
 
 x1 = tf.transpose(x, [1,0,2])
 rnn_cell = rnn.MultiRNNCell([rnn.LSTMCell(n_hidden1), rnn.LSTMCell(n_hidden2), rnn.LSTMCell(n_hidden3)])
-outputs, states = rnn.static_rnn(rnn_cell, x1, dtype=tf.float32)
+outputs, states = tf.nn.dynamic_rnn(rnn_cell, x1, dtype=tf.float32)
 
 pred = tf.contrib.layers.fully_connected(outputs[-1], label_size, activation_fn=None)
 loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=pred, labels=label))
