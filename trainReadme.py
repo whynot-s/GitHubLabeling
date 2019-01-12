@@ -15,6 +15,7 @@ def elapsed(sec):
         return str(sec / (60 * 60)) + " hr"
 
 
+correct_threshold = 0.3
 label_size = 3400
 word_vector_dim = 200
 
@@ -39,7 +40,7 @@ loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=pred, label
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
 
 label_true = tf.count_nonzero(label)
-logit_temp = tf.where(pred >= 0.5, x=pred, y=tf.zeros(tf.shape(pred)))
+logit_temp = tf.where(pred >= correct_threshold, x=pred, y=tf.zeros(tf.shape(pred)))
 logit_true = tf.count_nonzero(logit_temp)
 pred_correct = tf.count_nonzero(tf.multiply(tf.cast(label, tf.float32), logit_temp))
 
