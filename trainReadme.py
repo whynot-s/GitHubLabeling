@@ -51,7 +51,7 @@ saver = tf.train.Saver(max_to_keep=1)
 
 cfg = tf.ConfigProto(
     device_count={"CPU": 8},
-    nter_op_parallelism_threads = 0,
+    inter_op_parallelism_threads = 0,
     intra_op_parallelism_threads = 0,
     log_device_placement=True
 )
