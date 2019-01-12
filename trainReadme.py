@@ -49,8 +49,14 @@ recall = tf.divide(tf.cast(pred_correct, tf.float32), tf.cast(label_true, tf.flo
 savedir = "/sdpdata2/wjrj/log/readme_v1/"
 saver = tf.train.Saver(max_to_keep=1)
 
+cfg = tf.ConfigProto(
+    device_count={"CPU": 8},
+    nter_op_parallelism_threads = 0,
+    intra_op_parallelism_threads = 0,
+    log_device_placement=True
+)
 
-with tf.Session() as sess:
+with tf.Session(config=cfg) as sess:
     sess.run(tf.global_variables_initializer())
     step = 0
     loss_total = 0
