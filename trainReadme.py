@@ -37,7 +37,7 @@ outputs, states = tf.nn.dynamic_rnn(rnn_cell, x1, dtype=tf.float32)
 
 pred = tf.contrib.layers.fully_connected(outputs[-1], label_size, activation_fn=None)
 loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=pred, labels=label))
-optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
+optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(loss)
 
 sigmoid_pred = tf.math.sigmoid(pred)
 label_true = tf.count_nonzero(label)
