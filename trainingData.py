@@ -32,7 +32,7 @@ def next_id(batch_size=100):
     if mysql_counter % 100 == 0:
         global_counter += 1
         offset = (global_counter - 1) * batch_size * 100
-        cursor.execute("SELECT pid FROM rdLength_sorted2 ORDER BY rdlength ASC LIMIT %s OFFSET %s" % (batch_size * 100, offset))
+        cursor.execute("SELECT pid FROM rdLength_sorted2 LIMIT %s OFFSET %s" % (batch_size * 100, offset))
         ids = cursor.fetchall()
         id_list = []
         for pid in ids:
@@ -40,7 +40,7 @@ def next_id(batch_size=100):
         if len(id_list) != batch_size:
             global_counter = 1
             offset = (global_counter - 1) * batch_size * 100
-            cursor.execute("SELECT pid FROM rdLength_sorted2 ORDER BY rdlength ASC LIMIT %s OFFSET %s" % (batch_size * 100, offset))
+            cursor.execute("SELECT pid FROM rdLength_sorted2 LIMIT %s OFFSET %s" % (batch_size * 100, offset))
             ids = cursor.fetchall()
             id_list = []
             for pid in ids:
