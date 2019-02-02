@@ -18,9 +18,9 @@ for lb in lbs:
     lb_list[lb[0]] = int(lb[1])
 
 
-def next_batch(batch_size=100):
+def next_batch(sequence_length, batch_size=100):
     ids = next_id(batch_size)
-    X, Y = data_by_ids(ids)
+    X, Y = data_by_ids(ids, sequence_length)
     print(np.shape(X), np.shape(Y))
     return X, Y
 
@@ -52,11 +52,8 @@ def next_id(batch_size=100):
     return result
 
 
-def data_by_ids(ids):
-    max_length = 0
-    temp = readme_cleaned.find({'pid': str(ids[-1])}, {'readme_cleaned': 1, '_id': 0})
-    for t in temp:
-        max_length = len(t['readme_cleaned'].split(" "))
+def data_by_ids(ids, sequence_length):
+    max_length = sequence_length
     X = []
     Y = []
     for pid in ids:
@@ -69,14 +66,26 @@ def data_by_ids(ids):
                     y_temp[lb_list[topic] - 1] = 1
         Y.append(np.array(y_temp))
         xws = readme_cleaned.find({'pid': str(pid)}, {'readme_cleaned': 1, '_id': 0})
+        count = 0
+        flag = False
         for xw in xws:
             words = xw["readme_cleaned"].split(" ")
             for word in words:
                 try:
-                    x_temp.append(model.wv[word])
+                    x_temp.append(model.wv[word.strip()])
+                    count += 1
+                    if count == max_length:
+                        flag = True
+                        break
                 except:
                     None
+            if flag:
+                break
         for i in range(len(x_temp), max_length):
             x_temp.append(np.zeros(200))
         X.append(np.array(x_temp))
     return np.array(X), np.array(Y)
+
+
+def mock(batch_size, size, embedding_size, classes_num):
+    return np.random.random_sample((batch_size, size, embedding_size)), np.eye(classes_num)[np.random.randint(classes_num, size=batch_size)]
