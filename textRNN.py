@@ -49,9 +49,9 @@ class TextRNN:
 
         ssr_reversed = tf.reverse(state_series_right, [0])
         concated = tf.expand_dims(tf.transpose(tf.concat([state_series_left, self.x1, ssr_reversed], 2), [1, 0, 2]), 3)
-        pooled = tf.nn.max_pool(tf.tanh(concated), [1, 3, 1, 1], [1, 1, 1, 1], padding='VALID')
+        pooled = tf.nn.max_pool(tf.tanh(concated), [1, sequence_length, 1, 1], [1, 1, 1, 1], padding='VALID')
 
-        h_drop = tf.nn.dropout(pooled, keep_prob=dropout_keep_prob)
+        h_drop = tf.nn.dropout(tf.reshape(pooled, [batch_size, -1]), keep_prob=dropout_keep_prob)
         logits = tf.matmul(h_drop, self.W_projection) + self.b_projection
         losses = tf.nn.sigmoid_cross_entropy_with_logits(labels=self.input_Y, logits=logits)
         l2_losses = tf.add_n([tf.nn.l2_loss(v) for v in tf.trainable_variables() if 'bias' not in v.name]) * l2_lambda
