@@ -65,7 +65,7 @@ def data_by_ids(ids, sequence_length):
                 if topic in lb_list:
                     y_temp[lb_list[topic] - 1] = 1
         Y.append(np.array(y_temp))
-        xws = readme_cleaned.find({'pid': str(pid)}, {'readme_cleaned': 1, '_id': 0})
+        xws = list(readme_cleaned.find({'pid': str(pid)}, {'readme_cleaned': 1, '_id': 0}))
         count = 0
         flag = False
         for xw in xws:

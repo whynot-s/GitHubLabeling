@@ -10,7 +10,7 @@ def aquireDB(dbType, dbname):
         client = MongoClient(mongoConfig["host"], mongoConfig["port"])
         db = client.github
         collection = db[dbname]
-        print("Connected to Mongodb %s:%s %s" % (mongoConfig["host"], mongoConfig["port"], "topics"))
+        print("Connected to Mongodb %s:%s %s" % (mongoConfig["host"], mongoConfig["port"], dbname))
         return collection
     elif dbType == "mysql":
         mysqlConfig = dbConfig["mysql"]
