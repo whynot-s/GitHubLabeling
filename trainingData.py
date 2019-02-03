@@ -5,8 +5,9 @@ import gensim
 model = gensim.models.Word2Vec.load("/sdpdata2/wjrj/wiki.en.text.model_with_readme")
 print("Word2Vec Model Loaded")
 cursor, mysql_db = DB.aquireDB("mysql", "GitHubLabel")
-topics = DB.aquireDB("mongodb", "topics")
-readme_cleaned = DB.aquireDB("mongodb", "readme_cleaned")
+mdb = DB.aquireDB("mongodb", "topics")
+topics = mdb["topics"]
+readme_cleaned = mdb["readme_cleaned"]
 global_counter = 0
 mysql_counter = 0
 id_list = []
