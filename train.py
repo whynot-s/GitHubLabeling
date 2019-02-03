@@ -1,5 +1,4 @@
 import tensorflow as tf
-import trainingData
 from textRNN import TextRNN
 import numpy as np
 
@@ -38,6 +37,8 @@ with tf.Session() as sess:
     loss_total = 0
     prec_total = 0
     reca_total = 0
+
+    import trainingData
 
     while step < training_iters:
         X, Y = trainingData.next_batch(sequence_length, batch_size)
