@@ -14,7 +14,7 @@ display_step = 1
 batch_size = 100
 
 cfg = tf.ConfigProto(
-    device_count={"CPU": 4},
+    device_count={"CPU": 8},
     inter_op_parallelism_threads = 0,
     intra_op_parallelism_threads = 0,
     log_device_placement=True
@@ -41,9 +41,9 @@ with tf.Session() as sess:
     import trainingData
 
     while step < training_iters:
-        # X, Y = trainingData.next_batch(sequence_length, batch_size)
+        X, Y = trainingData.next_batch(sequence_length, batch_size)
         init_state = np.zeros([batch_size, context_size])
-        X, Y = trainingData.mock(batch_size, sequence_length, embedding_size, label_size)
+        # X, Y = trainingData.mock(batch_size, sequence_length, embedding_size, label_size)
         _, prec, reca, lossval = sess.run([optimizer, textrnn.precision, textrnn.recall, textrnn.loss],
                                                    feed_dict={ textrnn.input_X: X, textrnn.input_Y: Y,
                                                                textrnn.c_left: init_state, textrnn.c_right: init_state})

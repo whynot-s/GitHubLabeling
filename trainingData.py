@@ -59,13 +59,13 @@ def data_by_ids(ids, sequence_length):
     for pid in ids:
         x_temp = []
         y_temp = np.zeros(len(lb_list))
-        ys = list(topics.find({'pid': str(pid)}, {'topic': 1, '_id': 0}))
+        ys = topics.find({'pid': str(pid)}, {'topic': 1, '_id': 0})
         for y in ys:
             for topic in y['topic']:
                 if topic in lb_list:
                     y_temp[lb_list[topic] - 1] = 1
         Y.append(np.array(y_temp))
-        xws = list(readme_cleaned.find({'pid': str(pid)}, {'readme_cleaned': 1, '_id': 0}))
+        xws = readme_cleaned.find({'pid': str(pid)}, {'readme_cleaned': 1, '_id': 0})
         count = 0
         flag = False
         for xw in xws:

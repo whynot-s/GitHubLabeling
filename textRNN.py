@@ -23,7 +23,6 @@ class TextRNN:
         self.W_projection = tf.get_variable("W_projection", shape=[context_size*2+embedding_size, classes_num], initializer=tf.random_normal_initializer(stddev=0.1))
         self.b_projection = tf.get_variable("b_projection", shape=[classes_num])
 
-
         current_state_left = self.c_left
         current_state_right = self.c_right
 
