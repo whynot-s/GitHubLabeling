@@ -3,7 +3,7 @@ from textRNN import TextRNN
 import numpy as np
 
 correct_threshold = 0.5
-label_size = 1946
+label_size = 1954
 embedding_size = 200
 context_size = 128
 sequence_length = 200
