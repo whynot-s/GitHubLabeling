@@ -14,7 +14,7 @@ display_step = 1
 batch_size = 100
 
 cfg = tf.ConfigProto(
-    device_count={"CPU": 8},
+    device_count={"CPU": 4},
     inter_op_parallelism_threads = 0,
     intra_op_parallelism_threads = 0,
     log_device_placement=True
