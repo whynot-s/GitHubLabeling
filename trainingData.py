@@ -2,6 +2,8 @@ import DB
 import numpy as np
 import gensim
 
+topics = DB.aquireDB("mongodb", "topics")
+readme_cleaned = DB.aquireDB("mongodb", "readme_cleaned")
 cursor, mysql_db = DB.aquireDB("mysql", "GitHubLabel")
 model = gensim.models.Word2Vec.load("/sdpdata2/wjrj/wiki.en.text.model_with_readme")
 print("Word2Vec Model Loaded")
@@ -51,8 +53,6 @@ def next_id(batch_size=100):
 
 
 def data_by_ids(ids, sequence_length):
-    topics = DB.aquireDB("mongodb", "topics")
-    readme_cleaned = DB.aquireDB("mongodb", "readme_cleaned")
     max_length = sequence_length
     X = []
     Y = []
