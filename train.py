@@ -6,7 +6,7 @@ import numpy as np
 correct_threshold = 0.5
 label_size = 3400
 embedding_size = 200
-context_size = 256
+context_size = 128
 sequence_length = 200
 
 learning_rate = 0.001
@@ -28,7 +28,8 @@ with tf.Session() as sess:
         context_size=context_size,
         classes_num=label_size,
         correct_threshold=correct_threshold,
-        sequence_length=sequence_length
+        sequence_length=sequence_length,
+        dropout_keep_prob=1
     )
     optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(textrnn.loss)
     sess.run(tf.global_variables_initializer())
