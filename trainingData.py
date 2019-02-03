@@ -19,9 +19,9 @@ for lb in lbs:
     lb_list[lb[0]] = int(lb[1])
 
 
-def next_batch(sequence_length, batch_size=100):
+def next_batch(sequence_length, classes_num, batch_size=100):
     ids = next_id(batch_size)
-    X, Y = data_by_ids(ids, sequence_length)
+    X, Y = data_by_ids(ids, sequence_length, classes_num)
     print(np.shape(X), np.shape(Y))
     return X, Y
 
@@ -53,13 +53,13 @@ def next_id(batch_size=100):
     return result
 
 
-def data_by_ids(ids, sequence_length):
+def data_by_ids(ids, sequence_length, classes_num):
     max_length = sequence_length
     X = []
     Y = []
     for pid in ids:
         x_temp = []
-        y_temp = np.zeros(len(lb_list))
+        y_temp = np.zeros(classes_num)
         ys = topics.find({'pid': str(pid)}, {'topic': 1, '_id': 0})
         for y in ys:
             for topic in y['topic']:

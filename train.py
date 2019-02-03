@@ -41,7 +41,7 @@ with tf.Session() as sess:
     import trainingData
 
     while step < training_iters:
-        X, Y = trainingData.next_batch(sequence_length, batch_size)
+        X, Y = trainingData.next_batch(sequence_length, batch_size, label_size)
         init_state = np.zeros([batch_size, context_size])
         # X, Y = trainingData.mock(batch_size, sequence_length, embedding_size, label_size)
         _, prec, reca, lossval = sess.run([optimizer, textrnn.precision, textrnn.recall, textrnn.loss],
