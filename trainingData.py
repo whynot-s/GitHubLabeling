@@ -59,7 +59,7 @@ def data_by_ids(ids, sequence_length):
     for pid in ids:
         x_temp = []
         y_temp = np.zeros(len(lb_list))
-        ys = topics.find({'pid': str(pid)}, {'topic': 1, '_id': 0})
+        ys = list(topics.find({'pid': str(pid)}, {'topic': 1, '_id': 0}))
         for y in ys:
             for topic in y['topic']:
                 if topic in lb_list:
