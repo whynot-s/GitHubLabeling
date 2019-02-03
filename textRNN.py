@@ -20,7 +20,7 @@ class TextRNN:
         self.Ws_left = tf.get_variable('Ws_left', shape=[embedding_size, context_size], initializer=tf.random_normal_initializer(stddev=0.1))
         self.Ws_right = tf.get_variable('Ws_right', shape=[embedding_size, context_size], initializer=tf.random_normal_initializer(stddev=0.1))
         # Other Weights
-        self.W_projection = tf.get_variable("W_projection", shape=[context_size*2+embedding_size, classes_num], initializer=self.initializer)
+        self.W_projection = tf.get_variable("W_projection", shape=[context_size*2+embedding_size, classes_num], initializer=tf.random_normal_initializer(stddev=0.1))
         self.b_projection = tf.get_variable("b_projection", shape=[classes_num])
 
 
