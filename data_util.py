@@ -30,7 +30,7 @@ def split_and_transfer_data():
         if i % 1000 == 0:
             print("Processed %s, Failed %s" % (i, failed))
         pid = topics_list['pid']
-        if pid <= max_id:
+        if int(pid) <= max_id:
             continue
         flag = False
         label_ids = set([])
