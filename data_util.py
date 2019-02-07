@@ -37,7 +37,7 @@ def split_and_transfer_data():
                 try:
                     rdc = rd['readme_cleaned']
                     cursor.execute(
-                        "INSERT INTO readme_cleaned_filtered_1954(pid, labels, rdLength, label_num) VALUES(%s, \'%s\', %s, %s)" % (pid, lids, len(rdc), len(label_ids)))
+                        "INSERT INTO readme_cleaned_filtered_1954(pid, labels, rdLength, label_num) VALUES(%s, \'%s\', %s, %s)" % (pid, lids, len(rdc.split(" ")), len(label_ids)))
                     mysql_db.commit()
                     cursor.execute("UPDATE readme_cleaned_filtered_1954 SET readme_cleaned = \'%s\' WHERE pid = %s" % (rdc, pid))
                     mysql_db.commit()
