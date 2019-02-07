@@ -35,10 +35,11 @@ def split_and_transfer_data():
             readme = readme_cleaned.find({'pid': str(pid)}, {'readme_cleaned': 1, '_id': 0})
             for rd in readme:
                 try:
+                    rdc = rd['readme_cleaned']
                     cursor.execute(
-                        "INSERT INTO readme_cleaned_filtered_1954(pid, labels, rdLength) VALUES(%s, \'%s\', %s)" % (pid, lids, len(label_ids)))
+                        "INSERT INTO readme_cleaned_filtered_1954(pid, labels, rdLength, label_num) VALUES(%s, \'%s\', %s, %s)" % (pid, lids, len(rdc), len(label_ids)))
                     mysql_db.commit()
-                    cursor.execute("UPDATE readme_cleaned_filtered_1954 SET readme_cleaned = \'%s\' WHERE pid = %s" % (rd['readme_cleaned'], pid))
+                    cursor.execute("UPDATE readme_cleaned_filtered_1954 SET readme_cleaned = \'%s\' WHERE pid = %s" % (rdc, pid))
                     mysql_db.commit()
                 except Exception:
                     failed += 1
