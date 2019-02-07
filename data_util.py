@@ -16,12 +16,22 @@ def split_and_transfer_data():
         lb_list[lb[0]] = int(lb[1])
     labels = set(labels)
 
+    cursor.execute("SELECT max(pid) FROM readme_cleaned_filtered_1954")
+    c = cursor.fetchall()
+    max_id = 0
+    for cc in c:
+        max_id = int(cc[0])
+
     failed = 0
     all_topics = topics.find({}, {'pid': 1, 'topic' : 1, '_id' : 0})
     i = 0
     for topics_list in all_topics:
         i += 1
+        if i % 1000 == 0:
+            print("Processed %s, Failed %s" % (i, failed))
         pid = topics_list['pid']
+        if pid <= max_id:
+            continue
         flag = False
         label_ids = set([])
         for topic in topics_list['topic']:
