@@ -58,4 +58,36 @@ def split_and_transfer_data():
             print("Processed %s, Failed %s" % (i, failed))
 
 
-split_and_transfer_data()
+def tokenize():
+    import jieba
+    import jieba.posseg as pseg
+    personalized = ['2d', '3d']
+    for word in personalized:
+        jieba.add_word(word)
+    cursor, mysql_db = DB.aquire_mysql("GitHubLabel")
+    i = 1
+    while True:
+        cursor.execute("SELECT pid, readme_cleaned FROM readme_cleaned_filtered_1954_copy1 LIMIT 1000 OFFSET %s" % ((i - 1) * 1000))
+        result = cursor.fetchall()
+        if len(result) == 0:
+            break
+        for r in result:
+            pid = int(r[0])
+            readme = r[1]
+            output = ""
+            length = 0
+            seg_list = pseg.cut(readme)
+            for seg in seg_list:
+                if seg.word == ' ' or seg.flag == 'm' or (seg.flag == 'x' and seg.word not in personalized):
+                    continue
+                output += "%s " % seg.word
+                length += 1
+            cursor.execute("UPDATE readme_cleaned_filtered_1954_copy1 SET rc2 = \'%s\', rcLength = %s WHERE pid = %s"
+                           % (output, length, pid))
+            mysql_db.commit()
+        i += 1
+        if i % 10 == 0:
+            print("Processed %s" % (i * 1000))
+
+
+tokenize()
