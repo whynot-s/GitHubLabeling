@@ -125,5 +125,21 @@ def filter_w2v():
             print("Processed %s" % (i * 1000))
 
 
+def split_train_and_test_data():
+    cursor, mysql_db = DB.aquire_mysql("GitHubLabel")
+    for i in range(36860):
+        cursor.execute("SELECT pid, rc3 FROM readme_cleaned_filtered_1954_train ORDER BY RAND() LIMIT 1")
+        result = cursor.fetchall()
+        for r in result:
+            pid = r[0]
+            rc3 = r[1]
+            cursor.execute("INSERT INTO readme_cleaned_filtered_1954_test VALUES(%s, \'%s\')" % (pid, rc3))
+            cursor.execute("DELETE FROM readme_cleaned_filtered_1954_train WHERE pid = %s" % pid)
+            mysql_db.commit()
+        if i % 1000 == 0:
+            print("Processed %s / 36860" % i)
+    print("Done")
+
+split_train_and_test_data()
 # tokenize()
-filter_w2v()
+# filter_w2v()
