@@ -118,7 +118,7 @@ def filter_w2v():
                     insize += 1
                     output += (seg + " ")
             cursor.execute("UPDATE readme_cleaned_filtered_1954 SET inW2V = %s, outW2V = %s, rc3 = \'%s\' WHERE pid = %s"
-                           % (insize, output, output, pid))
+                           % (insize, outsize, output, pid))
             mysql_db.commit()
         i += 1
         if i % 10 == 0:
