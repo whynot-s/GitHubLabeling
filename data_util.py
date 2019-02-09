@@ -127,7 +127,7 @@ def filter_w2v():
 
 def split_train_and_test_data():
     cursor, mysql_db = DB.aquire_mysql("GitHubLabel")
-    for i in range(36860):
+    for i in range(31754):
         cursor.execute("SELECT pid, rc3, labels FROM readme_cleaned_filtered_1954_train ORDER BY RAND() LIMIT 1")
         result = cursor.fetchall()
         for r in result:
@@ -138,7 +138,7 @@ def split_train_and_test_data():
             cursor.execute("DELETE FROM readme_cleaned_filtered_1954_train WHERE pid = %s" % pid)
             mysql_db.commit()
         if i % 1000 == 0:
-            print("Processed %s / 36860" % i)
+            print("Processed %s / 31754" % i)
     print("Done")
 
 
