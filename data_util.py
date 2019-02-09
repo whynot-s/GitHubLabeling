@@ -90,4 +90,40 @@ def tokenize():
             print("Processed %s" % (i * 1000))
 
 
-tokenize()
+def filter_w2v():
+    import gensim
+    model = gensim.models.Word2Vec.load("/sdpdata2/wjrj/w2v/wiki.model")
+    cursor, mysql_db = DB.aquire_mysql("GitHubLabel")
+    i = 1
+    while True:
+        cursor.execute("SELECT pid, rc2 FROM readme_cleaned_filtered_1954 LIMIT 1000 OFFSET %s" % ((i - 1) * 1000))
+        result = cursor.fetchall()
+        if len(result) == 0:
+            break
+        for r in result:
+            pid = int(r[0])
+            readme = r[1]
+            output = ""
+            insize = 0
+            outsize = 0
+            for seg in readme.split(" "):
+                s = None
+                try:
+                    s = model.wv[seg]
+                except Exception:
+                    s = None
+                if s is None:
+                    outsize += 1
+                else:
+                    insize += 1
+                    output += (seg + " ")
+            cursor.execute("UPDATE readme_cleaned_filtered_1954 SET inW2V = %s, outW2V = %s, rc3 = \'%s\' WHERE pid = %s"
+                           % (insize, output, output, pid))
+            mysql_db.commit()
+        i += 1
+        if i % 10 == 0:
+            print("Processed %s" % (i * 1000))
+
+
+# tokenize()
+filter_w2v()
