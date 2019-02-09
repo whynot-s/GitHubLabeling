@@ -1,4 +1,5 @@
 import DB
+import numpy as np
 
 
 def split_and_transfer_data():
@@ -142,6 +143,59 @@ def split_train_and_test_data():
     print("Done")
 
 
-split_train_and_test_data()
+def create_vocabulary(word2vec_model_path, name_scope):
+    import gensim
+    import os
+    import pickle
+    cache_path = 'cache_vocabulary_label_pik/' + name_scope + "_word_vocabulary.pik"
+    print("cache_path:", cache_path, "file_exists:", os.path.exists(cache_path))
+    if os.path.exists(cache_path):
+        with open(cache_path, 'r') as data_f:
+            vocabulary_word2index, vocabulary_index2word = pickle.load(data_f)
+            return vocabulary_word2index, vocabulary_index2word
+    else:
+        vocabulary_word2index = {}
+        vocabulary_index2word = {}
+        print("create vocabulary. word2vec_model_path:", word2vec_model_path)
+        vocabulary_word2index['PAD'] = 0
+        vocabulary_index2word[0] = 'PAD'
+        model = gensim.models.Word2Vec.load(word2vec_model_path)
+        for i, vocab in enumerate(model.wv.vocab):
+            vocabulary_word2index[vocab] = i + 1
+            vocabulary_index2word[i + 1] = vocab
+        if not os.path.exists(cache_path):
+            with open(cache_path, 'a') as data_f:
+                pickle.dump((vocabulary_word2index, vocabulary_index2word), data_f)
+    return vocabulary_word2index, vocabulary_index2word
+
+
+def next_batch(offset, batch_size, num_classes, sequence_length, training=True):
+    cursor, mysql_db = DB.aquire_mysql("GitHubLabel")
+    if training:
+        cursor.execute("SELECT rc3, labels FROM readme_cleaned_filtered_1954_train LIMIT %s OFFSET %s"
+                       % (batch_size, offset * batch_size))
+    else:
+        cursor.execute("SELECT rc3, labels FROM readme_cleaned_filtered_1954_test LIMIT %s OFFSET %s"
+                       % (batch_size, offset * batch_size))
+    results = cursor.fetchall()
+    x = []
+    y = []
+    count = 0
+    for r in results:
+        rc3 = r[0].split(" ")[:-1]
+        labels = [int(v) - 1 for v in r[1].split(";")]
+        y.append(np.eye(num_classes)[labels])
+        if len(rc3) < sequence_length:
+            while len(rc3) < sequence_length:
+                rc3.append('PAD')
+        else:
+            rc3 = rc3[:sequence_length]
+        x.append(rc3)
+        count += 1
+    if count != batch_size:
+        return None, None
+    return x, y
+
+# split_train_and_test_data()
 # tokenize()
 # filter_w2v()

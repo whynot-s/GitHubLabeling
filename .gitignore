@@ -103,8 +103,12 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-#idea
+# idea
 .idea/
 
-#dbconfig
+# dbconfig
 dbConfig.json
+
+# cache
+TextRCNN_checkpoint/
+cache_vocabulary_label_pik/

@@ -8,7 +8,7 @@ def aquire_mysql(dbname):
         mysqlConfig = dbConfig["mysql"]
         mysql_db = pymysql.connect(mysqlConfig['host'], mysqlConfig['username'], mysqlConfig['password'], dbname)
         cursor = mysql_db.cursor()
-        print("Connected to Mysql %s:%s %s" % (mysqlConfig['host'], mysqlConfig['port'], dbname))
+        # print("Connected to Mysql %s:%s %s" % (mysqlConfig['host'], mysqlConfig['port'], dbname))
         return cursor, mysql_db
 
 def aquire_mongo():
