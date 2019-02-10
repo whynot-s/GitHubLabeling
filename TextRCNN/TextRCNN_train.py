@@ -24,9 +24,9 @@ tf.app.flags.DEFINE_string("word2vec_model_path", "/sdpdata2/wjrj/w2v/wiki.model
 
 
 def main(_):
-    vocabulary_word2index, vocabulary_index2word = create_vocabulary(FLAGS.word2vec_model_path, "TextRCNN")
-    vocab_size = len(vocabulary_word2index)
-    print("text_rcnn_model.vocab_size:", vocab_size)
+    # vocabulary_word2index, vocabulary_index2word = create_vocabulary(FLAGS.word2vec_model_path, "TextRCNN")
+    # vocab_size = len(vocabulary_word2index)
+    # print("text_rcnn_model.vocab_size:", vocab_size)
     config = tf.ConfigProto(
         device_count={"CPU": 8},
         inter_op_parallelism_threads=0,
@@ -44,13 +44,13 @@ def main(_):
         else:
             print('Initializing Variables')
             sess.run(tf.global_variables_initializer())
-            assign_pretrained_word_embedding(sess, vocabulary_index2word, vocab_size, textRCNN, word2vec_model_path=FLAGS.word2vec_model_path)
+            # assign_pretrained_word_embedding(sess, vocabulary_index2word, vocab_size, textRCNN, word2vec_model_path=FLAGS.word2vec_model_path)
         curr_epoch = sess.run(textRCNN.epoch_step)
         batch_size = FLAGS.batch_size
         for epoch in range(curr_epoch, FLAGS.num_epochs):
             loss, prec, reca, counter = 0.0, 0.0, 0.0, 0
             while True:
-                x, y = next_batch(counter, batch_size, FLAGS.num_classes, FLAGS.sequence_length, vocabulary_word2index, training=True)
+                x, y = next_batch(counter, batch_size, FLAGS.num_classes, FLAGS.sequence_length, textRCNN.w2vModel, training=True)
                 if x is None:
                     break
                 feed_dict = {textRCNN.input_x: x,
@@ -58,7 +58,7 @@ def main(_):
                              textRCNN.dropout_keep_prob: 0.5}
                 curr_loss, curr_prec, curr_reca, _ = sess.run([textRCNN.loss_val, textRCNN.precision, textRCNN.recall, textRCNN.train_op], feed_dict)
                 loss, counter, acc, reca = loss + curr_loss, counter + 1, prec + curr_prec, reca + curr_reca
-                if counter % 50 == 0:
+                if counter % 10 == 0:
                     print("Epoch %d\tBatch %d\tTrain Loss:%.3f\tTrain Precision:%.3f\tTrain Recall:%.3f" %
                           (epoch, counter, loss / float(counter), prec / float(counter), reca / float(reca)))
             print("going to increment epoch counter....")
@@ -108,7 +108,7 @@ def assign_pretrained_word_embedding(sess, vocabulary_index2word, vocab_size, te
 def do_eval(sess, textRCNN, batch_size):
     eval_loss, eval_prec, eval_reca, eval_counter = 0.0, 0.0, 0.0, 0
     while True:
-        x, y = next_batch(eval_counter, batch_size, FLAGS.num_classes, FLAGS.sequence_length, vocabulary_word2index, training=False)
+        x, y = next_batch(eval_counter, batch_size, FLAGS.num_classes, FLAGS.sequence_length, textRCNN.w2vModel, training=False)
         if x is None:
             break
         feed_dict = {textRCNN.input_x: x,

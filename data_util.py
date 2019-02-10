@@ -169,7 +169,7 @@ def create_vocabulary(word2vec_model_path, name_scope):
     return vocabulary_word2index, vocabulary_index2word
 
 
-def next_batch(offset, batch_size, num_classes, sequence_length, vocabulary_dict, training=True):
+def next_batch(offset, batch_size, num_classes, sequence_length, w2vModel, training=True):
     cursor, mysql_db = DB.aquire_mysql("GitHubLabel")
     if training:
         cursor.execute("SELECT rc3, labels FROM readme_cleaned_filtered_1954_train LIMIT %s OFFSET %s"
@@ -190,7 +190,7 @@ def next_batch(offset, batch_size, num_classes, sequence_length, vocabulary_dict
                 rc3.append('PAD')
         else:
             rc3 = rc3[:sequence_length]
-        x.append([vocabulary_dict[word] if word in vocabulary_dict else 0 for word in rc3])
+        x.append([w2vModel.wv[word] if word in w2vModel else 0 for word in rc3])
         count += 1
     if count != batch_size:
         return None, None

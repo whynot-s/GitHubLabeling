@@ -1,10 +1,12 @@
 import tensorflow as tf
 import copy
+import gensim
 
 
 class TextRCNN:
     def __init__(self, num_classes, learning_rate, batch_size, decay_steps, decay_rate, sequence_length,
-                 vocab_size, embed_size, is_training, correct_threshold, initializer=tf.random_normal_initializer(stddev=0.1)):
+                 vocab_size, embed_size, is_training, correct_threshold, word2vec_model_path,
+                 initializer=tf.random_normal_initializer(stddev=0.1)):
         self.num_classes = num_classes
         self.learning_rate = learning_rate
         self.batch_size = batch_size
@@ -16,8 +18,9 @@ class TextRCNN:
         self.is_training = is_training
         self.initializer = initializer
         self.activation = tf.nn.tanh
+        self.w2vModel = gensim.models.Word2Vec.load(word2vec_model_path)
 
-        self.input_x = tf.placeholder(tf.int32, [None, self.sequence_length])
+        self.input_x = tf.placeholder(tf.float32, [None, self.sequence_length, self.embed_size])
         self.input_y = tf.placeholder(tf.int32, [None, self.num_classes])
         self.dropout_keep_prob = tf.placeholder(tf.float32, name="dropout_keep_prob")
         self.global_step = tf.Variable(0, trainable=False, name="Global_Step")
@@ -100,7 +103,8 @@ class TextRCNN:
         return output
 
     def inference(self):
-        self.embedded_words = tf.nn.embedding_lookup(self.Embedding, self.input_x)  # [None, seq, emb]
+        # self.embedded_words = tf.nn.embedding_lookup(self.Embedding, self.input_x)  # [None, seq, emb]
+        self.embedded_words = self.input_x
         output_conv = self.conv_layer_with_recurrent_structure()  # [None, seq, emb*3]
         output_pooling=tf.reduce_max(output_conv, axis=1)  # [None, emb*3]
         with tf.name_scope("dropout"):
