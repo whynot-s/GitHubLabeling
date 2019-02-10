@@ -111,7 +111,7 @@ class TextRCNN:
 
     def loss(self, l2_lambda=0.00001):
         with tf.name_scope("loss"):
-            losses = tf.nn.sigmoid_cross_entropy_with_logits(labels=self.input_y, logits=self.logits)
+            losses = tf.nn.sigmoid_cross_entropy_with_logits(labels=tf.cast(self.input_y, tf.float32), logits=self.logits)
             losses = tf.reduce_sum(losses, axis=1)
             loss = tf.reduce_mean(losses)
             l2_losses = tf.add_n([tf.nn.l2_loss(v) for v in tf.trainable_variables() if 'bias' not in v.name]) * l2_lambda
