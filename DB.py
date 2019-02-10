@@ -3,7 +3,7 @@ import pymysql
 import json
 
 def aquire_mysql(dbname):
-    with open("dbConfig.json", "r") as f:
+    with open("/sdpdata2/wjrj/GitHubLabeling/dbConfig.json", "r") as f:
         dbConfig = json.loads(f.read())
         mysqlConfig = dbConfig["mysql"]
         mysql_db = pymysql.connect(mysqlConfig['host'], mysqlConfig['username'], mysqlConfig['password'], dbname)
@@ -12,7 +12,7 @@ def aquire_mysql(dbname):
         return cursor, mysql_db
 
 def aquire_mongo():
-    with open("dbConfig.json", "r") as f:
+    with open("/sdpdata2/wjrj/GitHubLabeling/dbConfig.json", "r") as f:
         dbConfig = json.loads(f.read())
         mongoConfig = dbConfig["mongodb"]
         client = MongoClient(mongoConfig["host"], mongoConfig["port"])
