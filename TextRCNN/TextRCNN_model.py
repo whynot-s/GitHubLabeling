@@ -17,9 +17,9 @@ class TextRCNN:
         self.initializer = initializer
         self.activation = tf.nn.tanh
 
-        self.input_x = tf.placeholder(tf.float32, [None, self.sequence_length])
+        self.input_x = tf.placeholder(tf.int32, [None, self.sequence_length])
         self.input_y = tf.placeholder(tf.int32, [None, self.num_classes])
-        self.dropout_keep_prob=tf.placeholder(tf.float32, name="dropout_keep_prob")
+        self.dropout_keep_prob = tf.placeholder(tf.float32, name="dropout_keep_prob")
         self.global_step = tf.Variable(0, trainable=False, name="Global_Step")
         self.epoch_step = tf.Variable(0, trainable=False, name="Epoch_Step")
         self.epoch_increment = tf.assign(self.epoch_step, tf.add(self.epoch_step, tf.constant(1)))
