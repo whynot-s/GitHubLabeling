@@ -147,7 +147,7 @@ def create_vocabulary(word2vec_model_path, name_scope):
     import gensim
     import os
     import pickle
-    cache_path = 'cache_vocabulary_label_pik/' + name_scope + "_word_vocabulary.pik"
+    cache_path = '/sdpdata2/wjrj/GitHubLabeling/cache_vocabulary_label_pik/' + name_scope + "_word_vocabulary.pik"
     print("cache_path:", cache_path, "file_exists:", os.path.exists(cache_path))
     if os.path.exists(cache_path):
         with open(cache_path, 'r') as data_f:
