@@ -183,7 +183,7 @@ def next_batch(offset, batch_size, num_classes, sequence_length, w2vModel, train
     count = 0
     for r in results:
         rc3 = r[0].split(" ")[:-1]
-        labels = [int(v) - 1 for v in r[1].split(";")]
+        labels = [int(v) - 1 for v in r[1].split(";")[:-1]]
         y.append(np.eye(num_classes)[labels])
         if len(rc3) < sequence_length:
             while len(rc3) < sequence_length:
