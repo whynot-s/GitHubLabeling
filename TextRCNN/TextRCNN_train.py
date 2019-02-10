@@ -49,6 +49,9 @@ def main(_):
             # assign_pretrained_word_embedding(sess, vocabulary_index2word, vocab_size, textRCNN, word2vec_model_path=FLAGS.word2vec_model_path)
         curr_epoch = sess.run(textRCNN.epoch_step)
         batch_size = FLAGS.batch_size
+        merged_summary_op = tf.summary.merge_all()
+        summary_writer = tf.summary.FileWriter('TextRCNN_with_summaries', sess.graph)
+        i = 0
         for epoch in range(curr_epoch, FLAGS.num_epochs):
             loss, prec, reca, counter = 0.0, 0.0, 0.0, 0
             while True:
@@ -60,6 +63,9 @@ def main(_):
                              textRCNN.dropout_keep_prob: 0.5}
                 curr_loss, curr_prec, curr_reca, _ = sess.run([textRCNN.loss_val, textRCNN.precision, textRCNN.recall, textRCNN.train_op], feed_dict)
                 loss, counter, prec, reca = loss + curr_loss, counter + 1, prec + curr_prec, reca + curr_reca
+                summmary_str = sess.run(merged_summary_op, feed_dict)
+                summary_writer.add_summary(summmary_str, i)
+                i += 1
                 if counter % 10 == 0:
                     print("Epoch %d\tBatch %d\tTrain Loss:%.3f\tTrain Precision:%.3f%%\tTrain Recall:%.3f%%" %
                           (epoch, counter, loss / float(counter), 100 * prec / float(counter), 100 * reca / float(counter)))
@@ -73,7 +79,6 @@ def main(_):
                 # save model to checkpoint
                 save_path = FLAGS.ckpt_dir + "model.ckpt"
                 saver.save(sess, save_path, global_step=epoch)
-
 
 def assign_pretrained_word_embedding(sess, vocabulary_index2word, vocab_size, textRCNN, word2vec_model_path=None):
     print("using pre-trained word embedding.started.word2vec_model_path:", word2vec_model_path)
