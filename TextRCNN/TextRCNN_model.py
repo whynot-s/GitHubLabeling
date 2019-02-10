@@ -49,7 +49,7 @@ class TextRCNN:
 
     def instantiate_weights(self):
         with tf.name_scope("weights"):
-            self.Embedding = tf.get_variable("Embedding", shape=[self.vocab_size, self.embed_size], initializer=self.initializer)
+            # self.Embedding = tf.get_variable("Embedding", shape=[self.vocab_size, self.embed_size], initializer=self.initializer)
             self.left_side_first_word = tf.get_variable("left_side_first_word", shape=[self.batch_size, self.embed_size], initializer=self.initializer)
             self.right_side_last_word = tf.get_variable("right_side_last_word",shape=[self.batch_size, self.embed_size], initializer=self.initializer)
             self.W_l=tf.get_variable("W_l", shape=[self.embed_size, self.embed_size], initializer=self.initializer)

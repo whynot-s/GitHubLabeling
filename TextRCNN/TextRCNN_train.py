@@ -27,6 +27,7 @@ def main(_):
     # vocabulary_word2index, vocabulary_index2word = create_vocabulary(FLAGS.word2vec_model_path, "TextRCNN")
     # vocab_size = len(vocabulary_word2index)
     # print("text_rcnn_model.vocab_size:", vocab_size)
+    vocab_size = 0
     config = tf.ConfigProto(
         device_count={"CPU": 8},
         inter_op_parallelism_threads=0,
@@ -36,7 +37,7 @@ def main(_):
     with tf.Session(config=config) as sess:
         textRCNN = TextRCNN(FLAGS.num_classes, FLAGS.learning_rate, FLAGS.batch_size, FLAGS.decay_steps,
                             FLAGS.decay_rate, FLAGS.sequence_length, vocab_size, FLAGS.embed_size, FLAGS.is_training,
-                            FLAGS.correct_threshold)
+                            FLAGS.correct_threshold, FLAGS.word2vec_model_path)
         saver = tf.train.Saver()
         if os.path.exists(FLAGS.ckpt_dir+"checkpoint"):
             print("Restoring Variables from Checkpoint")
