@@ -29,7 +29,7 @@ def main(_):
     print("text_rcnn_model.vocab_size:", vocab_size)
     config = tf.ConfigProto(
         device_count={"CPU": 8},
-        nter_op_parallelism_threads=0,
+        inter_op_parallelism_threads=0,
         intra_op_parallelism_threads=0,
         log_device_placement=True
     )
