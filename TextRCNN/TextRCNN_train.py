@@ -51,7 +51,7 @@ def main(_):
         for epoch in range(curr_epoch, FLAGS.num_epochs):
             loss, prec, reca, counter = 0.0, 0.0, 0.0, 0
             while True:
-                x, y = next_batch(counter, batch_size, FLAGS.num_classes, FLAGS.sequence_length, textRCNN.w2vModel, training=True)
+                x, y = next_batch(counter, batch_size, FLAGS.num_classes, FLAGS.sequence_length, textRCNN.w2vModel, FLAGS.embed_size, training=True)
                 if x is None:
                     break
                 feed_dict = {textRCNN.input_x: x,
@@ -109,7 +109,7 @@ def assign_pretrained_word_embedding(sess, vocabulary_index2word, vocab_size, te
 def do_eval(sess, textRCNN, batch_size):
     eval_loss, eval_prec, eval_reca, eval_counter = 0.0, 0.0, 0.0, 0
     while True:
-        x, y = next_batch(eval_counter, batch_size, FLAGS.num_classes, FLAGS.sequence_length, textRCNN.w2vModel, training=False)
+        x, y = next_batch(eval_counter, batch_size, FLAGS.num_classes, FLAGS.sequence_length, textRCNN.w2vModel, FLAGS.embed_size, training=False)
         if x is None:
             break
         feed_dict = {textRCNN.input_x: x,
