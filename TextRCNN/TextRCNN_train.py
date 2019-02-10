@@ -1,3 +1,5 @@
+import sys
+sys.path.append("../")
 import os
 import gensim
 import numpy as np
