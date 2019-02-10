@@ -62,7 +62,7 @@ def main(_):
                 loss, counter, acc, reca = loss + curr_loss, counter + 1, prec + curr_prec, reca + curr_reca
                 if counter % 10 == 0:
                     print("Epoch %d\tBatch %d\tTrain Loss:%.3f\tTrain Precision:%.3f\tTrain Recall:%.3f" %
-                          (epoch, counter, loss / float(counter), prec / float(counter), reca / float(reca)))
+                          (epoch, counter, loss / float(counter), prec / float(counter), reca / float(counter)))
             print("going to increment epoch counter....")
             sess.run(textRCNN.epoch_increment)
             print(epoch, FLAGS.validate_every, (epoch % FLAGS.validate_every == 0))
