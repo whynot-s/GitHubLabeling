@@ -196,6 +196,7 @@ def next_batch(offset, batch_size, num_classes, sequence_length, w2vModel, embed
             rc3 = rc3[:sequence_length]
         x.append([w2vModel.wv[word] if word in w2vModel else np.random.uniform(-bound, bound, embed_size) for word in rc3])
         count += 1
+    mysql_db.close()
     if count != batch_size:
         return None, None
     return x, y
