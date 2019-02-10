@@ -4,7 +4,7 @@ import copy
 
 class TextRCNN:
     def __init__(self, num_classes, learning_rate, batch_size, decay_steps, decay_rate, sequence_length,
-                 vocab_size, embed_size, is_training, correct_threshold):
+                 vocab_size, embed_size, is_training, correct_threshold, initializer=tf.random_normal_initializer(stddev=0.1)):
         self.num_classes = num_classes
         self.learning_rate = learning_rate
         self.batch_size = batch_size
@@ -14,6 +14,7 @@ class TextRCNN:
         self.embed_size = embed_size
         self.correct_threshold = correct_threshold
         self.is_training = is_training
+        self.initializer = initializer
         self.activation = tf.nn.tanh
 
         self.input_x = tf.placeholder(tf.float32, [None, self.sequence_length])
@@ -45,15 +46,15 @@ class TextRCNN:
 
     def instantiate_weights(self):
         with tf.name_scope("weights"):
-            self.Embedding = tf.get_variable("Embedding", shape=[self.vocab_size, self.embed_size], initializer=tf.random_normal_initializer(stddev=0.1))
-            self.left_side_first_word = tf.get_variable("left_side_first_word", shape=[self.batch_size, self.embed_size], initializer=tf.random_normal_initializer(stddev=0.1))
-            self.right_side_last_word = tf.get_variable("right_side_last_word",shape=[self.batch_size, self.embed_size], initializer=tf.random_normal_initializer(stddev=0.1))
-            self.W_l=tf.get_variable("W_l", shape=[self.embed_size, self.embed_size], initializer=tf.random_normal_initializer(stddev=0.1))
-            self.W_r=tf.get_variable("W_r", shape=[self.embed_size, self.embed_size], initializer=tf.random_normal_initializer(stddev=0.1))
-            self.W_sl=tf.get_variable("W_sl", shape=[self.embed_size, self.embed_size], initializer=tf.random_normal_initializer(stddev=0.1))
-            self.W_sr=tf.get_variable("W_sr", shape=[self.embed_size, self.embed_size], initializer=tf.random_normal_initializer(stddev=0.1))
+            self.Embedding = tf.get_variable("Embedding", shape=[self.vocab_size, self.embed_size], initializer=self.initializer)
+            self.left_side_first_word = tf.get_variable("left_side_first_word", shape=[self.batch_size, self.embed_size], initializer=self.initializer)
+            self.right_side_last_word = tf.get_variable("right_side_last_word",shape=[self.batch_size, self.embed_size], initializer=self.initializer)
+            self.W_l=tf.get_variable("W_l", shape=[self.embed_size, self.embed_size], initializer=self.initializer)
+            self.W_r=tf.get_variable("W_r", shape=[self.embed_size, self.embed_size], initializer=self.initializer)
+            self.W_sl=tf.get_variable("W_sl", shape=[self.embed_size, self.embed_size], initializer=self.initializer)
+            self.W_sr=tf.get_variable("W_sr", shape=[self.embed_size, self.embed_size], initializer=self.initializer)
 
-            self.W_projection = tf.get_variable("W_projection",shape=[self.hidden_size * 3, self.num_classes], initializer=tf.random_normal_initializer(stddev=0.1))
+            self.W_projection = tf.get_variable("W_projection",shape=[self.hidden_size * 3, self.num_classes], initializer=self.initializer)
             self.b_projection = tf.get_variable("b_projection",shape=[self.num_classes])
 
     def get_context_left(self, context_left, embedding_previous):

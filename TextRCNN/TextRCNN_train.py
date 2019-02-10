@@ -36,7 +36,7 @@ def main(_):
     with tf.Session(config=config) as sess:
         textRCNN = TextRCNN(FLAGS.num_classes, FLAGS.learning_rate, FLAGS.batch_size, FLAGS.decay_steps,
                             FLAGS.decay_rate, FLAGS.sequence_length, vocab_size, FLAGS.embed_size, FLAGS.is_training,
-                            FLAGS.batch_size, FLAGS.correct_threshold)
+                            FLAGS.correct_threshold)
         saver = tf.train.Saver()
         if os.path.exists(FLAGS.ckpt_dir+"checkpoint"):
             print("Restoring Variables from Checkpoint")
