@@ -150,7 +150,7 @@ def create_vocabulary(word2vec_model_path, name_scope):
     cache_path = '/sdpdata2/wjrj/GitHubLabeling/cache_vocabulary_label_pik/' + name_scope + "_word_vocabulary.pik"
     print("cache_path:", cache_path, "file_exists:", os.path.exists(cache_path))
     if os.path.exists(cache_path):
-        with open(cache_path, 'r') as data_f:
+        with open(cache_path, 'rb') as data_f:
             vocabulary_word2index, vocabulary_index2word = pickle.load(data_f)
             return vocabulary_word2index, vocabulary_index2word
     else:
