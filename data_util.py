@@ -164,7 +164,7 @@ def create_vocabulary(word2vec_model_path, name_scope):
             vocabulary_word2index[vocab] = i + 1
             vocabulary_index2word[i + 1] = vocab
         if not os.path.exists(cache_path):
-            with open(cache_path, 'a') as data_f:
+            with open(cache_path, 'wb') as data_f:
                 pickle.dump((vocabulary_word2index, vocabulary_index2word), data_f)
     return vocabulary_word2index, vocabulary_index2word
 
