@@ -59,7 +59,7 @@ def main(_):
                              textRCNN.input_y: y,
                              textRCNN.dropout_keep_prob: 0.5}
                 curr_loss, curr_prec, curr_reca, _ = sess.run([textRCNN.loss_val, textRCNN.precision, textRCNN.recall, textRCNN.train_op], feed_dict)
-                loss, counter, acc, reca = loss + curr_loss, counter + 1, prec + curr_prec, reca + curr_reca
+                loss, counter, prec, reca = loss + curr_loss, counter + 1, prec + curr_prec, reca + curr_reca
                 if counter % 10 == 0:
                     print("Epoch %d\tBatch %d\tTrain Loss:%.3f\tTrain Precision:%.3f%%\tTrain Recall:%.3f%%" %
                           (epoch, counter, loss / float(counter), 100 * prec / float(counter), 100 * reca / float(counter)))
