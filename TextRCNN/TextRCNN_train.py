@@ -6,6 +6,7 @@ import numpy as np
 import tensorflow as tf
 from data_util import create_vocabulary, next_batch
 from TextRCNN.TextRCNN_model import TextRCNN
+import multiprocessing
 
 FLAGS = tf.app.flags.FLAGS
 tf.app.flags.DEFINE_integer("num_classes", 1954, "number of label")
@@ -29,7 +30,7 @@ def main(_):
     # print("text_rcnn_model.vocab_size:", vocab_size)
     vocab_size = 0
     config = tf.ConfigProto(
-        device_count={"CPU": 8},
+        device_count={"CPU": multiprocessing.cpu_count()},
         inter_op_parallelism_threads=0,
         intra_op_parallelism_threads=0,
         log_device_placement=True
