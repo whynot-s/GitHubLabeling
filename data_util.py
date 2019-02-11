@@ -169,22 +169,15 @@ def create_vocabulary(word2vec_model_path, name_scope):
     return vocabulary_word2index, vocabulary_index2word
 
 
-def next_batch(offset, batch_size, num_classes, sequence_length, w2vModel, embed_size, training=True):
+def next_batch(input_data, batch_size, num_classes, sequence_length, w2vModel, embed_size):
+    if len(input_data) != batch_size:
+        return None, None
     bound = np.sqrt(6.0) / np.sqrt(100000)
-    cursor, mysql_db = DB.aquire_mysql("GitHubLabel")
-    if training:
-        cursor.execute("SELECT rc3, labels FROM readme_cleaned_filtered_1954_train LIMIT %s OFFSET %s"
-                       % (batch_size, offset * batch_size))
-    else:
-        cursor.execute("SELECT rc3, labels FROM readme_cleaned_filtered_1954_test LIMIT %s OFFSET %s"
-                       % (batch_size, offset * batch_size))
-    results = cursor.fetchall()
     x = []
     y = []
-    count = 0
-    for r in results:
-        rc3 = r[0].split(" ")[:-1]
-        labels = [int(v) - 1 for v in r[1].split(";")[:-1]]
+    for i in range(batch_size):
+        rc3 = input_data.iloc[i, 1].split(" ")[:-1]
+        labels = [int(v) - 1 for v in input_data.iloc[i, 0].split(";")[:-1]]
         y_temp = np.zeros(num_classes)
         for label in labels:
             y_temp[label] = 1
@@ -195,11 +188,8 @@ def next_batch(offset, batch_size, num_classes, sequence_length, w2vModel, embed
         else:
             rc3 = rc3[:sequence_length]
         x.append([w2vModel.wv[word] if word in w2vModel else np.random.uniform(-bound, bound, embed_size) for word in rc3])
-        count += 1
-    mysql_db.close()
-    if count != batch_size:
-        return None, None
     return x, y
+
 
 # split_train_and_test_data()
 # tokenize()

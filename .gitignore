@@ -112,3 +112,6 @@ dbConfig.json
 # cache
 TextRCNN_checkpoint/
 cache_vocabulary_label_pik/
+
+# data
+data/

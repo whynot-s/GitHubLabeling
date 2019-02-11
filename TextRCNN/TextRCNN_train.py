@@ -4,9 +4,10 @@ import os
 import gensim
 import numpy as np
 import tensorflow as tf
-from data_util import create_vocabulary, next_batch
+from data_util import next_batch
 from TextRCNN.TextRCNN_model import TextRCNN
 import multiprocessing
+import pandas as pd
 
 FLAGS = tf.app.flags.FLAGS
 tf.app.flags.DEFINE_integer("num_classes", 1954, "number of label")
@@ -22,6 +23,8 @@ tf.app.flags.DEFINE_boolean("is_training", True, "is training.true:training,fals
 tf.app.flags.DEFINE_integer("num_epochs", 60, "number of epochs to run.")
 tf.app.flags.DEFINE_integer("validate_every", 1, "Validate every validate_every epochs.")
 tf.app.flags.DEFINE_string("word2vec_model_path", "/sdpdata2/wjrj/w2v/wiki.model", "word2vec's vocabulary and vectors")
+tf.app.flags.DEFINE_string("train_csv_data_path", "/sdpdata2/wjrj/GitHubLabeling/data/readme_cleaned_filtered_1954_train.csv", "Data to train")
+tf.app.flags.DEFINE_string("test_csv_data_path", "/sdpdata2/wjrj/GitHubLabeling/data/readme_cleaned_filtered_1954_test.csv", "Data to test")
 
 
 def main(_):
@@ -51,11 +54,13 @@ def main(_):
         batch_size = FLAGS.batch_size
         merged_summary_op = tf.summary.merge_all()
         summary_writer = tf.summary.FileWriter('TextRCNN_with_summaries', sess.graph)
+        input_data = pd.read_csv(FLAGS.train_csv_data_path)
         i = 0
         for epoch in range(curr_epoch, FLAGS.num_epochs):
             loss, prec, reca, counter = 0.0, 0.0, 0.0, 0
             while True:
-                x, y = next_batch(counter, batch_size, FLAGS.num_classes, FLAGS.sequence_length, textRCNN.w2vModel, FLAGS.embed_size, training=True)
+                start, end = counter * batch_size, (counter + 1) * batch_size
+                x, y = next_batch(input_data[start:end], batch_size, FLAGS.num_classes, FLAGS.sequence_length, textRCNN.w2vModel, FLAGS.embed_size)
                 if x is None:
                     break
                 feed_dict = {textRCNN.input_x: x,
@@ -114,8 +119,10 @@ def assign_pretrained_word_embedding(sess, vocabulary_index2word, vocab_size, te
 
 def do_eval(sess, textRCNN, batch_size):
     eval_loss, eval_prec, eval_reca, eval_counter = 0.0, 0.0, 0.0, 0
+    test_input_data = pd.read_csv(FLAGS.test_csv_data_path)
     while True:
-        x, y = next_batch(eval_counter, batch_size, FLAGS.num_classes, FLAGS.sequence_length, textRCNN.w2vModel, FLAGS.embed_size, training=False)
+        start, end = eval_counter * batch_size, (eval_counter + 1) * batch_size
+        x, y = next_batch(test_input_data[start:end], batch_size, FLAGS.num_classes, FLAGS.sequence_length, textRCNN.w2vModel, FLAGS.embed_size)
         if x is None:
             break
         feed_dict = {textRCNN.input_x: x,
