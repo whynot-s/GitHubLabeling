@@ -45,6 +45,7 @@ class TextRCNN:
 
         self.precision = tf.divide(tf.cast(pred_correct, tf.float32), tf.cast(logit_true, tf.float32))
         self.recall = tf.divide(tf.cast(pred_correct, tf.float32), tf.cast(label_true, tf.float32))
+        self.prediction = pred
 
         tf.summary.scalar('loss', self.loss_val)
         tf.summary.scalar('precision', self.precision)

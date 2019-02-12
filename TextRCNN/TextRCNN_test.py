@@ -45,12 +45,12 @@ def main(_):
         else:
             print("No model found at %s" % FLAGS.ckpt_dir + "checkpoint")
             return
-        eval_loss, eval_prec, eval_reca = do_eval(sess, textRCNN, FLAGS.batch_size)
+        eval_loss, eval_prec, eval_reca = do_eval(sess, textRCNN, FLAGS.batch_size, FLAGS.num_classes, FLAGS.correct_threshold)
         print("Validation Loss:%.3f\tValidation Precision: %.3f\tValidation Recall: %.3f" %
               (eval_loss, eval_prec, eval_reca))
 
 
-def do_eval(sess, textRCNN, batch_size):
+def do_eval(sess, textRCNN, batch_size, num_classes, correct_threshold):
     eval_loss, eval_prec, eval_reca, eval_counter = 0.0, 0.0, 0.0, 0
     test_input_data = pd.read_csv(FLAGS.test_csv_data_path)
     while True:
@@ -61,10 +61,25 @@ def do_eval(sess, textRCNN, batch_size):
         feed_dict = {textRCNN.input_x: x,
                      textRCNN.input_y: y,
                      textRCNN.dropout_keep_prob: 1}
-        curr_eval_loss, logits, curr_eval_prec, curr_eval_reca = sess.run(
-            [textRCNN.loss_val, textRCNN.logits, textRCNN.precision, textRCNN.recall], feed_dict)
-        eval_loss, eval_prec, eval_reca, eval_counter = eval_loss + curr_eval_loss, eval_prec + curr_eval_prec, eval_reca + curr_eval_reca, eval_counter + 1
-    return eval_loss / float(eval_counter), eval_prec / float(eval_counter), eval_reca / float(eval_counter)
+        curr_eval_loss, prediction = sess.run(
+            [textRCNN.loss_val, textRCNN.prediction], feed_dict)
+        eval_loss += curr_eval_loss
+        eval_counter += 1
+        for i in range(batch_size):
+            label_true = 0.0
+            pred_true = 0.0
+            pred_correct = 0.0
+            for j in range(num_classes):
+                if y[i][j] == 1:
+                    label_true += 1.0
+                if prediction[i][j] >= correct_threshold:
+                    pred_true += 1.0
+                if y[i][j] == 1 and prediction[i][j] >= correct_threshold:
+                    pred_correct += 1.0
+            if pred_true > 0:
+                eval_prec += (pred_correct / pred_true)
+            eval_reca += (pred_correct / label_true)
+    return eval_loss / float(eval_counter*batch_size), eval_prec / float(eval_counter*batch_size), eval_reca / float(eval_counter*batch_size)
 
 
 if __name__ == "__main__":
