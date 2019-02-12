@@ -127,7 +127,7 @@ def do_eval(sess, textRCNN, batch_size):
             break
         feed_dict = {textRCNN.input_x: x,
                      textRCNN.input_y: y,
-                     textRCNN.dropout_keep_prob: 1}
+                     textRCNN.dropout_keep_prob: 0.4}
         curr_eval_loss, logits, curr_eval_prec, curr_eval_reca = sess.run(
             [textRCNN.loss_val, textRCNN.logits, textRCNN.precision, textRCNN.recall], feed_dict)
         eval_loss, eval_prec, eval_reca, eval_counter = eval_loss + curr_eval_loss, eval_prec + curr_eval_prec, eval_reca + curr_eval_reca, eval_counter + 1
