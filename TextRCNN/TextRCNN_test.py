@@ -65,3 +65,7 @@ def do_eval(sess, textRCNN, batch_size):
             [textRCNN.loss_val, textRCNN.logits, textRCNN.precision, textRCNN.recall], feed_dict)
         eval_loss, eval_prec, eval_reca, eval_counter = eval_loss + curr_eval_loss, eval_prec + curr_eval_prec, eval_reca + curr_eval_reca, eval_counter + 1
     return eval_loss / float(eval_counter), eval_prec / float(eval_counter), eval_reca / float(eval_counter)
+
+
+if __name__ == "__main__":
+    tf.app.run()
