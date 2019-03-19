@@ -117,7 +117,7 @@ TextCNN_checkpoint/
 TextCNN/TextCNN_with_summaries/
 TextRNN_checkpoint/
 TextRNN/TextRNN_with_summaries/
-TextHAN_checkpoint/
-TextHAN/TextHAN_with_summaries/
+HAN_checkpoint/
+HAN/HAN_with_summaries/
 # data
 data/
