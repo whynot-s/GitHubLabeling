@@ -38,13 +38,14 @@ class TextRCNN:
         self.predictions = tf.argmax(self.logits, axis=1, name="predictions")
 
         pred = tf.nn.sigmoid(self.logits)
-        label_true = tf.count_nonzero(self.input_y)
+        label_true = tf.count_nonzero(self.input_y, axis=1)
         logit_temp = tf.where(pred >= self.correct_threshold, x=pred, y=tf.zeros(tf.shape(pred)))
-        logit_true = tf.count_nonzero(logit_temp)
-        pred_correct = tf.count_nonzero(tf.multiply(tf.cast(self.input_y, tf.float32), logit_temp))
+        logit_true = tf.cast(tf.count_nonzero(logit_temp, axis=1), tf.float32)
+        logit_true_bz = tf.where(logit_true < 1, x=tf.zeros(tf.shape(logit_true)) + 1, y=logit_true)
+        pred_correct = tf.count_nonzero(tf.multiply(tf.cast(self.input_y, tf.float32), logit_temp), axis=1)
+        self.precision = tf.reduce_mean(tf.divide(tf.cast(pred_correct, tf.float32), logit_true_bz))
+        self.recall = tf.reduce_mean(tf.divide(pred_correct, label_true))
 
-        self.precision = tf.divide(tf.cast(pred_correct, tf.float32), tf.cast(logit_true, tf.float32))
-        self.recall = tf.divide(tf.cast(pred_correct, tf.float32), tf.cast(label_true, tf.float32))
         self.prediction = pred
 
         tf.summary.scalar('loss', self.loss_val)

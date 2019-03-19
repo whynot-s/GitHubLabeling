@@ -113,6 +113,11 @@ dbConfig.json
 TextRCNN_checkpoint/
 cache_vocabulary_label_pik/
 TextRCNN/TextRCNN_with_summaries/
-
+TextCNN_checkpoint/
+TextCNN/TextCNN_with_summaries/
+TextRNN_checkpoint/
+TextRNN/TextRNN_with_summaries/
+TextHAN_checkpoint/
+TextHAN/TextHAN_with_summaries/
 # data
 data/
